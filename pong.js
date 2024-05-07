@@ -9,6 +9,7 @@ let hit = new Audio();
 let wall = new Audio();
 let userScore = new Audio();
 let comScore = new Audio();
+let hasGun = false;
 
 hit.src = "sounds/hit.mp3";
 wall.src = "sounds/wall.mp3";
@@ -100,8 +101,27 @@ function drawText(text,x,y){
     ctx.font = "75px fantasy";
     ctx.fillText(text, x, y);
 }
+function dead(){
+    com.y = canvas.height;
+    }
+function shoot(event){
+        setInterval(dead, 1000/framePerSecond);
+        
+}
 
-// collision detection
+function giveGun(p){
+    gun_image = new Image();
+    gun_image.src = 'images/gun.png'
+   
+    gun_image.onload = function(){
+        ctx.drawImage(gun_image, 10, p.y +25, 70, 50);
+      }
+      
+      addEventListener("click", shoot, { once: true } );
+      
+}
+
+
 function collision(b,p){
     p.top = p.y;
     p.bottom = p.y + p.height;
@@ -142,6 +162,8 @@ function update(){
     if(ball.y - ball.radius < 0 || ball.y + ball.radius > canvas.height){
         ball.velocityY = -ball.velocityY;
         wall.play();
+
+        
     }
     
     // we check if the paddle hit the user or the com paddle
@@ -170,7 +192,15 @@ function update(){
         
         // speed up the ball everytime a paddle hits it.
         ball.speed += 0.1;
+
+        
     }
+    if ((com.score - user.score) >= 3){
+        giveGun(user);
+    }
+    
+   
+    
 }
 
 // render function, the function that does al the drawing
